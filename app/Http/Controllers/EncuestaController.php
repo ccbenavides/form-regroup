@@ -38,19 +38,27 @@ class EncuestaController extends Controller
 
         }
         $customerArr = $this->csvToArray($file);
+        // Guardo las respuestas 
         for ($i = 0; $i < count($customerArr); $i ++) {
-            $coordinador = \App\Coordinador::updateOrCreate([
-                'nombre' => $customerArr[$i][$header[1]]
-            ]);
-            $init_respuesta = 2;
-            foreach ($header as $key => $pregunta) {
-                if ($key >= $init_respuesta){
-                    \App\Respuesta::create([
-                        'respuesta' =>  $customerArr[$i][$header[$init_respuesta]],
-                        'pregunta_id' => $array_pregunta[$init_respuesta],
-                        'coordinador_id' => $coordinador->id
+            $nombre_array = explode(";", $customerArr[$i][$header[1]]);
+            foreach ($nombre_array as $key => $nombre_coordinador) {
+                # code...
+                if ($nombre_coordinador != "") {
+                    $coordinador = \App\Coordinador::updateOrCreate([
+                        'nombre' => trim($nombre_coordinador),
+                        'encuesta_id' => $encuesta->id
                     ]);
-                    $init_respuesta++;
+                    $init_respuesta = 2;
+                    foreach ($header as $key => $pregunta) {
+                        if ($key >= $init_respuesta){
+                            \App\Respuesta::create([
+                                'respuesta' =>  $customerArr[$i][$header[$init_respuesta]],
+                                'pregunta_id' => $array_pregunta[$init_respuesta],
+                                'coordinador_id' => $coordinador->id
+                            ]);
+                            $init_respuesta++;
+                        }
+                    }
                 }
             }
         }
@@ -58,13 +66,14 @@ class EncuestaController extends Controller
         return redirect()->route('encuesta');
     }
     
-    public function detalle(){
-        $encuesta  = \App\Encuesta::find(1);
+    public function detalle(Request $request){
+        $encuesta  = \App\Encuesta::find($request->enc);
         $preguntas = \App\Pregunta::where('encuesta_id', $encuesta->id)->get();
-        $coordinador = \App\Coordinador::find(2);
+        $coordinador = \App\Coordinador::find($request->cord);
+        
         
         return view("encuesta-detalle")->with([
-            'encuesta' => $encuesta,
+            'encuesta' => str_replace(".csv", "", $encuesta->nombre),
             'preguntas' => $preguntas,
             'coordinador' => $coordinador
         ]);        

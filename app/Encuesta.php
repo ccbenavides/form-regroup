@@ -9,4 +9,9 @@ class Encuesta extends Model
     //
     protected $fillable = [ "nombre" ];
 
+    public function coordinadors()
+    {
+        return $this->hasMany('App\Coordinador');
+    }
+
 }

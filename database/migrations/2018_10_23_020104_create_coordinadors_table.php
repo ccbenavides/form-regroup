@@ -22,6 +22,8 @@ class CreateCoordinadorsTable extends Migration
         Schema::create('coordinadors', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
+            $table->integer('encuesta_id')->unsigned();
+            $table->foreign('encuesta_id')->references('id')->on('encuestas');
             $table->timestamps();
         });
     }

@@ -13,4 +13,5 @@
 
 Route::get('/', 'EncuestaController@index')->name("encuesta");
 Route::post('/procesar-encuesta', 'EncuestaController@procesar')->name("procesar");
-Route::get('/detalle-encuesta', 'EncuestaController@detalle');
+Route::get('/detalle-encuesta', 'EncuestaController@detalle')->name('detalle-encuesta');
+Route::get('/saldos', 'TestController@saldos')->name('saldos');

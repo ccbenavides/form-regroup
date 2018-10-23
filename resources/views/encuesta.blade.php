@@ -26,14 +26,18 @@
         <thead>
             <tr>
                 <th>Nombre de encuesta</th>
-                <th>Acciones</th>
+                <th>Coordinadores</th>
             </tr>
         </thead>
         <tbody>
             @foreach($data as $encuesta)
             <tr>
-                <td> {{ $encuesta->nombre }} </td>
-                <td> <a href="#" class='link'> Eliminar </a> </td>
+                <td> {{ str_replace(".csv", "",$encuesta->nombre) }} </td>
+                <td>
+                    @foreach ($encuesta->coordinadors()->where('nombre','<>', 'SI')->get() as $coordinador)
+                    <a class='link' href='{{ route('detalle-encuesta',[ 'enc' => $encuesta->id , 'cord' => $coordinador->id ]) }}'>{{ $coordinador->nombre }} </a> <br>
+                    @endforeach
+                </td>
             </tr>
             @endforeach
         </tbody>

@@ -14,8 +14,8 @@
             margin-top:30px;
         }
         .respuesta{
-            margin:0;
-            padding:8px 20px;
+            margin:0 10px;
+            padding:8px 10px;
         }
         .respuesta:nth-child(2n+2){
             background: #f1f2f3;
@@ -29,6 +29,7 @@
         @media print
         {    
             body{
+                -webkit-print-color-adjust: exact; 
                 background: #fff;
             }
             .no-print, .no-print *
@@ -37,16 +38,15 @@
             }
         }
     </style>
-    <title>Document</title>
+    <title>{{ str_slug($encuesta . "-" . $coordinador->nombre)  }}</title>
 </head>
 <body>
 
 <section class='container' style="background:#fff;min-height:100vh;">
     <br>
-    <h4>SISTEMA PARA RESPUESTAS DE GOOGLE FORM</h4>
+    <h4>{{ $encuesta }}</h4>
     <br>
-    <p>Encuesta : <b>{{ $encuesta->nombre }}</b></p>
-    <p>Encuesta : <b>{{ $coordinador->nombre }}</b></p>
+    <p>Coordinador : <b>{{ $coordinador->nombre }}</b></p>
     @foreach($preguntas as $pregunta)
         <h5 class='respuesta_cabezera'>{{ $pregunta->nombre }}</h5>
         @foreach ($pregunta->respuestas()->where('coordinador_id', $coordinador->id)->get() as $respuesta)
